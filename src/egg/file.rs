@@ -1,4 +1,3 @@
-use super::EggBlock;
 use super::EggCommentHeader;
 use super::EggEncryptionHeader;
 
@@ -8,17 +7,17 @@ pub struct EggFile {
 }
 
 pub struct EggFileMetadata {
-    header: EggFileHeader,
-    optional_header: Vec<EggFileOptionalHeader>,
+    header: EggFileMetadataHeader,
+    options: Vec<EggFileOptionHeader>,
 }
 
-pub struct EggFileHeader {
+pub struct EggFileMetadataHeader {
     magic: u32,
     file_id: u32,
     file_length: u64,
 }
 
-pub enum EggFileOptionalHeader {
+pub enum EggFileOptionHeader {
     Filename(EggFilenameHeader),
     Comment(EggCommentHeader),
     WindowsFileInfo(EggWindowsFileInfoHeader),
@@ -51,4 +50,24 @@ pub struct EggPosixFileInfoHeader {
     uid: u32,
     gid: u32,
     last_modified: u64,
+}
+
+pub struct EggBlock {
+    header: EggBlockHeader,
+    extra_data: Vec<EggExtraData>,
+    compressed_data: Vec<u8>,
+}
+
+pub struct EggBlockHeader {
+    magic: u32,
+    method: u16,
+    original_size: u32,
+    compressed_size: u32,
+    crc32: u32,
+}
+
+pub struct EggExtraData {
+    magic: u32,
+    bit_flag: u8,
+    size: u32, // 2 bytes or 4 bytes
 }

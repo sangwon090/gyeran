@@ -1,13 +1,6 @@
-use super::EggEncryptionHeader;
+use super::encryption::EggEncryptionHeader;
 
-pub struct EggHeader {
-    magic: u32,
-    version: u16,
-    header_id: u32,
-    reserved: u32,
-}
-
-pub enum EggOptionalHeader {
+pub enum EggOptionHeader {
     SplitCompression(EggSplitCompressionHeader),
     SolidCompression(EggSolidCompressionHeader),
     GloablEncryption(EggEncryptionHeader),

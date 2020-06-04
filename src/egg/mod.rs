@@ -1,18 +1,27 @@
-pub mod block;
 pub mod comment;
 pub mod encryption;
 pub mod file;
 pub mod header;
+pub mod magic;
+pub mod option;
 
-use block::*;
 use comment::*;
 use encryption::*;
 use file::*;
 use header::*;
+use option::*;
+
 
 pub struct EggArchive {
     header: EggHeader,
-    optional_header: Vec<EggOptionalHeader>,
-    files: EggFile,
+    options: Vec<EggOptionHeader>,
+    files: Vec<EggFile>,
     comments: Vec<EggCommentHeader>,
+}
+
+pub struct EggHeader {
+    magic: u32,
+    version: u16,
+    header_id: u32,
+    reserved: u32,
 }
