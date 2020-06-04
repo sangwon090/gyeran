@@ -1,16 +1,13 @@
 pub mod comment;
 pub mod encryption;
 pub mod file;
-pub mod header;
 pub mod magic;
 pub mod option;
 
 use comment::*;
 use encryption::*;
 use file::*;
-use header::*;
 use option::*;
-
 
 pub struct EggArchive {
     header: EggHeader,
