@@ -1,9 +1,8 @@
 pub struct EggEncryptionHeader {
-    magic: u32,
     bit_flag: u8,
-    size: u32, // 17 bytes
+    size: u32,                   // 17 bytes
     method: EggEncryptionMethod, // 1 byte
-    verify_data: u128, // 12 bytes
+    verify_data: u128,           // 12 bytes
     crc32: u32,
     encryption_header: Vec<u8>, // 128 bit: 10 bytes, 256 bit: 18 bytes
     encryption_footer: Vec<u8>, // 10 bytes

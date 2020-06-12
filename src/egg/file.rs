@@ -22,7 +22,7 @@ pub enum EggFileOptionHeader {
     Comment(EggCommentHeader),
     WindowsFileInfo(EggWindowsFileInfoHeader),
     PosixFileInfo(EggPosixFileInfoHeader),
-    Encryption(EggEncryptionHeader)
+    Encryption(EggEncryptionHeader),
 }
 
 pub struct EggFilenameHeader {
@@ -59,7 +59,6 @@ pub struct EggBlock {
 }
 
 pub struct EggBlockHeader {
-    magic: u32,
     method: u16,
     original_size: u32,
     compressed_size: u32,
@@ -67,7 +66,6 @@ pub struct EggBlockHeader {
 }
 
 pub struct EggExtraData {
-    magic: u32,
     bit_flag: u8,
     size: u32, // 2 bytes or 4 bytes
 }
