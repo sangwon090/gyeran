@@ -8,9 +8,9 @@ pub struct EggHeader {
 
 #[derive(Debug)]
 pub struct FileHeader {
-    signature: u32,
-    file_id: u32,
-    file_length: u64,
+    pub signature: u32,
+    pub file_id: u32,
+    pub file_length: u64,
 }
 
 #[derive(Debug)]
@@ -38,7 +38,7 @@ pub struct ExtraField32 {
 
 #[derive(Debug)]
 pub struct EncryptionHeader128 {
-    signauture: u32,
+    signature: u32,
     flag: u8,
     size: [u8; 17],
     method: u8,
@@ -90,12 +90,12 @@ pub struct DummyHeader {
 
 #[derive(Debug)]
 pub struct FilenameHeader {
-    signature: u32,
-    flag: u8,
-    size: u16,
-    locale: Option<u16>,
-    parent_path_id: Option<u32>,
-    name: Vec<u8>,
+    pub signature: u32,
+    pub flag: u8,
+    pub size: u16,
+    pub locale: Option<u16>,
+    pub parent_path_id: Option<u32>,
+    pub name: Vec<u8>,
 }
 
 #[derive(Debug)]
