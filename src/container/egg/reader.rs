@@ -1,7 +1,7 @@
-use nom::{do_parse, named};
 use nom::number::streaming::{le_u16, le_u32};
 
-use std::io::{Read, Seek};
+use nom::sequence::tuple;
+use nom::error::{ErrorKind};
 use super::header::*;
 use super::error::EggError;
 use super::signature::EggSignature;
@@ -9,32 +9,27 @@ use super::signature::EggSignature;
 pub struct EggReader;
 
 impl EggReader {
-    pub fn read_signature(mut reader: impl Read + Seek) -> EggSignature {
-        let mut data: [u8; 4] = [0; 4];
-        reader.read(&mut data).unwrap();
+    pub fn read_signature(buf: &[u8]) -> Result<(&[u8], EggSignature), EggError> {
+        let mut parser = le_u32::<_, (_, ErrorKind)>;
+        let (buf, signature) = parser(buf).unwrap();
 
-        u32::from_le_bytes(data).into()
+        return Ok((buf, signature.into()))
     }
 
-    pub fn read_egg_header(mut reader: impl Read + Seek) -> Result<EggHeader, EggError> {
-        named!(parse<EggHeader>,
-            do_parse!(
-                signature: le_u32 >>
-                version: le_u16 >>
-                header_id: le_u32 >>
-                reserved: le_u32 >>
-                (EggHeader {
-                    signature: signature,
-                    version: version,
-                    header_id: header_id,
-                    reserved: reserved,
-                })
-            )
-        );
+    pub fn read_egg_header(buf: &[u8]) -> Result<(&[u8], EggHeader), EggError> {
+        let mut parser = tuple((
+            le_u32::<_, (_, ErrorKind)>,
+            le_u16::<_, (_, ErrorKind)>,
+            le_u32::<_, (_, ErrorKind)>,
+            le_u32::<_, (_, ErrorKind)>
+        ));
+        let (buf, (signature, version, header_id, reserved)): (&[u8], (u32, u16, u32, u32)) = parser(buf).unwrap();
 
-        let mut data: [u8; 14] = [0; 14];
-        reader.read(&mut data).unwrap();
-
-        Ok(parse(&data).unwrap().1)
+        return Ok((buf, EggHeader {
+            signature,
+            version,
+            header_id,
+            reserved,
+        }));
     }
 }

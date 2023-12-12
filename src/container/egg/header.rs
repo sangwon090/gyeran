@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct EggHeader {
     pub signature: u32,
     pub version: u16,
@@ -5,12 +6,14 @@ pub struct EggHeader {
     pub reserved: u32,
 }
 
+#[derive(Debug)]
 pub struct FileHeader {
     signature: u32,
     file_id: u32,
     file_length: u64,
 }
 
+#[derive(Debug)]
 pub struct BlockHeader {
     signature: u32,
     compression_method: u16,
@@ -19,18 +22,21 @@ pub struct BlockHeader {
     crc32: u32,
 }
 
+#[derive(Debug)]
 pub struct ExtraField16 {
     signature: u32,
     flag: u8,
     size: u16,
 }
 
+#[derive(Debug)]
 pub struct ExtraField32 {
     signature: u32,
     flag: u8,
     size: u32,
 }
 
+#[derive(Debug)]
 pub struct EncryptionHeader128 {
     signauture: u32,
     flag: u8,
@@ -42,6 +48,7 @@ pub struct EncryptionHeader128 {
     aes_footer: [u8; 10],
 }
 
+#[derive(Debug)]
 pub struct EncryptionHeader256 {
     signauture: u32,
     flag: u8,
@@ -53,6 +60,7 @@ pub struct EncryptionHeader256 {
     aes_footer: [u8; 10],
 }
 
+#[derive(Debug)]
 pub struct WindowsFileInfo {
     signature: u32,
     flag: u8,
@@ -61,6 +69,7 @@ pub struct WindowsFileInfo {
     attribute: u8,
 }
 
+#[derive(Debug)]
 pub struct PosixFileInfo {
     signature: u32,
     flag: u8,
@@ -71,6 +80,7 @@ pub struct PosixFileInfo {
     last_modified: u64,
 }
 
+#[derive(Debug)]
 pub struct DummyHeader {
     signature: u32,
     flag: u8,
@@ -78,6 +88,7 @@ pub struct DummyHeader {
     data: Vec<u8>,
 }
 
+#[derive(Debug)]
 pub struct FilenameHeader {
     signature: u32,
     flag: u8,
@@ -87,6 +98,7 @@ pub struct FilenameHeader {
     name: Vec<u8>,
 }
 
+#[derive(Debug)]
 pub struct CommentHeader {
     signature: u32,
     flag: u8,
@@ -94,6 +106,7 @@ pub struct CommentHeader {
     comment: Vec<u8>,
 }
 
+#[derive(Debug)]
 pub struct SplitHeader {
     signature: u32,
     flag: u8,
@@ -102,6 +115,7 @@ pub struct SplitHeader {
     next_file_id: u32,
 }
 
+#[derive(Debug)]
 pub struct SolidHeader {
     signature: u32,
     flag: u8,

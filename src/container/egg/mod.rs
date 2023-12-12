@@ -19,30 +19,40 @@ pub struct EggArchive {
 impl EggArchive {
     pub fn new(mut reader: impl Read + Seek) -> Result<EggArchive, EggError> {
         reader.seek(SeekFrom::Start(0)).unwrap();
-        
-        let header = EggReader::read_egg_header(&mut reader).unwrap();
 
-        if header.signature != EggSignature::EGG as u32 {
+        let mut buffer = Vec::new();
+        reader.read_to_end(&mut buffer).unwrap();
+
+        let (buffer, header) = EggReader::read_egg_header(&buffer).unwrap();
+
+        if header.signature != EggSignature::Egg as u32 {
             return Err(EggError::InvalidSignature);
         }
 
         loop {
-            let signature = EggReader::read_signature(&mut reader);
+            let (buffer, signature) = EggReader::read_signature(&buffer).unwrap();
 
             match signature {
-                EggSignature::SPLIT => {
+                EggSignature::Split => {
                     unimplemented!();
                 },
-                EggSignature::SOLID => {
+                EggSignature::Solid => {
                     unimplemented!();
                 },
-                EggSignature::GLOBAL_ENCRYPTION => {
+                EggSignature::GlobalEncryption => {
                     unimplemented!();
                 },
-                EggSignature::END_OF_SIGNATURE => break,
-                _ => eprintln!("unexpected signature: {:#?}", signature),
+                EggSignature::EndOfSignature => {
+                    println!("EndOfSignature found");
+                    break; },
+                _ => {
+                    eprintln!("unexpected signature: {:#?}", signature);
+                    break;
+                },
             }
         }
+
+        println!("{:#?}", header);
 
         Err(EggError::ParseError)
     }
