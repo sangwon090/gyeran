@@ -1,15 +1,17 @@
 use std::{env, fs};
 use std::fs::File;
-use std::io::{prelude::*, BufReader};
-use flate2::read::DeflateDecoder;
+use std::io::prelude::*;
+use flate2::read::{DeflateDecoder, ZlibDecoder};
 use nom::AsBytes;
 
+use gyeran::algorithm::Algorithm;
 use gyeran::egg::EggArchive;
+
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    //let file: File = File::open(&args[1]).unwrap();
-    let archive: EggArchive = EggArchive::new(File::open("test.egg").unwrap()).unwrap();
+    let file: File = File::open(&args[1]).unwrap();
+    let archive: EggArchive = EggArchive::new(file).unwrap();
 
     for file in archive.files {
         let filename = String::from_utf8(file.filename_header.unwrap().name).unwrap();
@@ -20,20 +22,30 @@ fn main() {
         println!("  compression algorithm: {}", file.block_header.compression_method);
         println!(" ");
 
-        let compression_method =  file.block_header.compression_method & 0xFF;
+        let compression_method = Algorithm::from((file.block_header.compression_method & 0xFF) as u8);
         let decompressed_data = match compression_method {
-            0 => {
+            Algorithm::None => {
                 file.data
             },
-            1 => {
+            Algorithm::Deflate => {
                 let mut d = DeflateDecoder::new(file.data.as_bytes());
                 let mut b: Vec<u8> = Vec::new();
                 d.read_to_end(&mut b).unwrap();
 
                 b
             },
-            _ => {
-                unimplemented!("compression algorithm not supported.");
+            Algorithm::AZO => {
+                unimplemented!("AZO algorithm not supported yet.");
+            }
+            Algorithm::LZMA => {
+                let mut d = ZlibDecoder::new(file.data.as_bytes());
+                let mut b: Vec<u8> = Vec::new();
+                d.read_to_end(&mut b).unwrap();
+
+                b
+            }
+            Algorithm::Unknown => {
+                panic!("unknown algorithm.");
             }
         };
 
