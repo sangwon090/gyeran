@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct EggHeader {
     pub signature: u32,
     pub version: u16,
@@ -6,14 +6,14 @@ pub struct EggHeader {
     pub reserved: u32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct FileHeader {
     pub signature: u32,
     pub file_id: u32,
     pub file_length: u64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct BlockHeader {
     pub signature: u32,
     pub compression_method: u16,
@@ -22,21 +22,21 @@ pub struct BlockHeader {
     pub crc32: u32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct ExtraField16 {
     signature: u32,
     flag: u8,
     size: u16,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct ExtraField32 {
     signature: u32,
     flag: u8,
     size: u32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct EncryptionHeader128 {
     signature: u32,
     flag: u8,
@@ -48,9 +48,9 @@ pub struct EncryptionHeader128 {
     aes_footer: [u8; 10],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct EncryptionHeader256 {
-    signauture: u32,
+    signature: u32,
     flag: u8,
     size: [u8; 17],
     method: u8,
@@ -60,7 +60,7 @@ pub struct EncryptionHeader256 {
     aes_footer: [u8; 10],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct WindowsFileInfo {
     pub signature: u32,
     pub flag: u8,
@@ -69,7 +69,7 @@ pub struct WindowsFileInfo {
     pub attribute: u8,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct PosixFileInfo {
     signature: u32,
     flag: u8,
@@ -80,7 +80,7 @@ pub struct PosixFileInfo {
     last_modified: u64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct DummyHeader {
     signature: u32,
     flag: u8,
@@ -88,7 +88,7 @@ pub struct DummyHeader {
     data: Vec<u8>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct FilenameHeader {
     pub signature: u32,
     pub flag: u8,
@@ -98,7 +98,7 @@ pub struct FilenameHeader {
     pub name: Vec<u8>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct CommentHeader {
     signature: u32,
     flag: u8,
@@ -106,7 +106,7 @@ pub struct CommentHeader {
     comment: Vec<u8>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct SplitHeader {
     signature: u32,
     flag: u8,
@@ -115,7 +115,7 @@ pub struct SplitHeader {
     next_file_id: u32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct SolidHeader {
     signature: u32,
     flag: u8,

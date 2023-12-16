@@ -1,4 +1,5 @@
 pub mod error;
+pub mod file;
 pub mod header;
 pub mod reader;
 pub mod signature;
@@ -7,19 +8,23 @@ pub mod writer;
 use std::io::{Read, Seek, SeekFrom, Write};
 
 use error::EggError;
+use file::EggFile;
 use header::*;
 use signature::EggSignature;
 
 use self::reader::EggReader;
 
+#[derive(Debug)]
 pub struct EggArchive {
-    header: EggHeader,
+    pub header: EggHeader,
+    pub files: Vec<EggFile>,
 }
 
 impl EggArchive {
     pub fn new(mut reader: impl Read + Seek) -> Result<EggArchive, EggError> {
         reader.seek(SeekFrom::Start(0)).unwrap();
 
+        let mut files: Vec<EggFile> = Vec::new();
         let mut buffer = Vec::new();
         reader.read_to_end(&mut buffer).unwrap();
 
@@ -60,6 +65,8 @@ impl EggArchive {
 
 
         loop {
+            let mut file: EggFile = EggFile::default();
+
             let (_, signature) = EggReader::read_signature(&buffer[..4]).unwrap();
 
             if signature == EggSignature::EndOfSignature {
@@ -72,8 +79,9 @@ impl EggArchive {
                 buffer = buf;
 
                 if file_header.signature != EggSignature::File as u32 {
-                    println!("not a file signature. {:X} found", file_header.signature);
                     return Err(EggError::InvalidSignature);
+                } else {
+                    file.file_header = file_header;
                 }
 
                 // Extra Field 2
@@ -83,6 +91,7 @@ impl EggArchive {
                     match signature {
                         EggSignature::Filename => {
                             let (buf, filename) = EggReader::read_filename_header(&buffer).unwrap();
+                            file.filename_header = Some(filename);
                             buffer = buf;
                         },
                         EggSignature::Comment => {
@@ -90,6 +99,7 @@ impl EggArchive {
                         },
                         EggSignature::WindowsFileInfo => {
                             let (buf, windows_file_info) = EggReader::read_windows_file_info(&buffer).unwrap();
+                            file.windows_file_info = Some(windows_file_info);
                             buffer = buf;
                         },
                         EggSignature::PosixFileInfo => {
@@ -117,6 +127,8 @@ impl EggArchive {
 
             if block_header.signature != EggSignature::Block as u32 {
                 return Err(EggError::InvalidSignature);
+            } else {
+                file.block_header = block_header.clone();
             }
 
             let (buf, signature) = EggReader::read_signature(&buffer).unwrap();
@@ -126,17 +138,17 @@ impl EggArchive {
                 return Err(EggError::InvalidSignature);
             }
 
+            // TODO: need to write the offset and the size of the data, instead of copying it all.
             let (buf, data) = EggReader::read_data(&buffer, block_header.compressed_size).unwrap();
+            file.data = Vec::from(data);
             buffer = buf;
+
+            files.push(file);
         }
 
         Ok(EggArchive {
             header,
+            files,
         })
     }
 }
-
-/*
-0x71
-
-*/
