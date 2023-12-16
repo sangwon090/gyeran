@@ -15,11 +15,11 @@ pub struct FileHeader {
 
 #[derive(Debug)]
 pub struct BlockHeader {
-    signature: u32,
-    compression_method: u16,
-    original_size: u32,
-    compressed_size: u32,
-    crc32: u32,
+    pub signature: u32,
+    pub compression_method: u16,
+    pub original_size: u32,
+    pub compressed_size: u32,
+    pub crc32: u32,
 }
 
 #[derive(Debug)]
@@ -62,11 +62,11 @@ pub struct EncryptionHeader256 {
 
 #[derive(Debug)]
 pub struct WindowsFileInfo {
-    signature: u32,
-    flag: u8,
-    size: u16,
-    last_modified: u64,
-    attribute: u8,
+    pub signature: u32,
+    pub flag: u8,
+    pub size: u16,
+    pub last_modified: u64,
+    pub attribute: u8,
 }
 
 #[derive(Debug)]

@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum EggSignature {
     Egg = 0x41474745,
     File = 0x0A8590E3,
