@@ -1,8 +1,9 @@
 [package]
 name = "gyeran"
 version = "0.1.0"
-authors = ["Sangwon Ryu <bdboy090@naver.com>"]
+authors = ["Sangwon Ryu <bdboy4665@gmail.com>"]
 edition = "2018"
 
 [dependencies]
 nom = "7"
+flate2 = "1.0"
