@@ -19,7 +19,6 @@ fn main() {
         println!("- {}", filename);
         println!("  original size: {}", file.block_header.original_size);
         println!("  compressed size: {}", file.block_header.compressed_size);
-        println!("  compression algorithm: {}", file.block_header.compression_method);
         println!(" ");
 
         let compression_method = Algorithm::from((file.block_header.compression_method & 0xFF) as u8);
@@ -48,6 +47,8 @@ fn main() {
                 panic!("unknown algorithm.");
             }
         };
+
+        fs::create_dir_all("./out/").unwrap();
 
         let mut new_file = fs::OpenOptions::new()
             .create(true)
